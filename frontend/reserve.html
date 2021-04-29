@@ -8,6 +8,7 @@
   <!-- Latest compiled and minified CSS & JS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  
   <script src="https://code.jquery.com/jquery.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
@@ -60,7 +61,7 @@
                 <label for="reserve-unique-id">Unique ID</label>
                 <input type="text" class="form-control" id="reserve-unique-id">
               </div>
-              <button type="submit" class="btn btn-primary submit">Submit</button>
+              <button type="submit" class="btn btn-primary submit" id="submit">Submit</button>
             </form>
           </div>
         </div>
@@ -84,6 +85,62 @@
 
 <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS SENT TO OUR SERVER -->
 <script type="text/javascript">
+//Declare variables for buttons and managing areas
+var btnSubmit = $('#submit');
+var nameText = $('#reserve-name');
+var phoneText = $('#reserve-phone');
+var emailText = $('#reserve-email');
+var idText = $('#reserve-unique-id');
 
+//Events on buttons
+btnSubmit.on('click', postRsv);
+
+//Function to Post a reservation into tables available
+function postRsv(e){
+    e.preventDefault();
+    var lastT = countTables();
+    var newT;
+    var success;
+
+    if(lastT < 5){
+      newT = lastT + 1;
+      
+      //New Table created
+      var newTable = {
+        name: nameText.val(),
+        phNum: phoneText.val(),
+        email: emailText.val(),
+        id: idText.val(),
+        table: newT
+      }
+      
+      //Post new table to tables array
+      $.post("/api/tables", newTable).then(function(res){
+        console.log("Table added", res);
+        alert('Adding table...');
+      })
+
+      success = true;
+    }
+    else if (lastT >= 5) {
+      success = false;
+      postWait(e);
+    }
+    console.log (success);
+}
+
+//Function to post a reservation to waitlist
+function postWait(e){
+
+}
+
+
+//Function to get the last table occupied
+function countTables(){
+  // e.preventDefault();  
+  $.get('/api/tables', function(res){
+    return res[res.length-1].table;
+  })
+}
 
 </script>

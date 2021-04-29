@@ -69,7 +69,19 @@ var listaRsv = [];
     tables.push(newtable);
   
     res.json(newtable);
+    });
+    // Add Tables to waitlist - takes in JSON input
+  app.post("/api/waitlist", function(req, res) {
+
+    var newtable = req.body;
+  
+    console.log(newtable);
+  
+    listaRsv.push(newtable);
+  
+    res.json(newtable);
   });
+
 
 //Start the server
 app.listen(PORT_ONE, function(){

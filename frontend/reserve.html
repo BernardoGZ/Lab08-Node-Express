@@ -97,25 +97,25 @@ var idText = $('#reserve-unique-id');
 //Events on buttons
 btnSubmit.on('click', postRsv);
 
-//Function to Post a reservation into tables available
+//Function to Post a reservation into tables available, or into waitlist
 function postRsv(e){
     e.preventDefault();
     $.get('/api/tables', function(res){
         var lastT =  parseInt(res[res.length-1].table, 10);
         var newT;
         var successRsv;
-
-        if(lastT < 5){
-              newT = lastT + 1;
-
-              //New Table created
-              var newTable = {
+        
+        //New Table created
+        var newTable = {
                 name: nameText.val(),
                 phNum: phoneText.val(),
                 email: emailText.val(),
                 id: idText.val(),
-                table: newT
-              }
+        }
+        //Available table
+        if(lastT < 5){
+              newT = lastT + 1;
+              newTable.table = newT;
               
               //Post new table to tables array
               $.post("/api/tables", newTable).then(function(res){
@@ -126,10 +126,14 @@ function postRsv(e){
               successRsv = true;
 
         }
+        //Not available table
         else if (lastT >= 5) {
             successRsv = false;
-            postWait(e);
-            alert(`Currently we don't have tables available. \nAdding you to the Waitlist...`);
+            $.post("/api/waitlist", newTable).then(function(res){
+                console.log("Table added to Waitlist", res);
+                alert(`Currently we don't have tables available. \nAdding you to the Waitlist...`);
+              })
+            
         }
         console.log (successRsv);
     })   
@@ -141,31 +145,5 @@ function postRsv(e){
     
 }
 
-//Function to post a reservation to waitlist
-function postWait(e){
-
-}
-
-
-//Function to get the last table occupied
-// function countTables(){
-//   // e.preventDefault();  
-//   var tableNum = $.get('/api/tables', function(res){
-//     // tableNum =  res[res.length-1].table;
-//     // console.log(res[res.length-1].table)
-    
-//     // tableNum = tempgetTable(res[res.length-1].table);
-//     // console.log(tableNum);
-//     async: false;
-//     return res[res.length-1].table;
-//   })
-//   console.log(tableNum);
-//   return tableNum;
-// }
-
-// function tempgetTable(res){
-//   var table = res;
-//   return table
-// }
 
 </script>

@@ -38,7 +38,16 @@
             <h4>Current Reservations</h4>
           </div>
           <div class="card-body">
-            <ul id="tableList" class="list-group"></ul>
+            <ul id="tableList" class="list-group">
+              <li class="list-gorup-item mt-4">
+                <h2>Table 0</h2>
+                <hr>
+                <h3>Id: 2</h3>
+                <h3>Name: B</h3>
+                <h3>Email: B</h3>
+                <h3>Phone: 0</h3>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -69,7 +78,22 @@
 
 
 <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS LOADED FROM OUR SERVER -->
-<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-<script src="app.js"></script>
+<script type="text/javascript">
+    var tableList = $("#tableList");
+    
+    $.get('/api/tables', function(res){
+        for (let i = 0; i < res.length; i++) {
+            tableList.html(tableList.html() + `<li class="list-gorup-item mt-4">
+                <h2>Table ${res[i].table}</h2>
+                <hr>
+                <h3>Id: ${res[i].id}</h3>
+                <h3>Name: ${res[i].name}</h3>
+                <h3>Email: ${res[i].email}</h3>
+                <h3>Phone: ${res[i].phNum}</h3>
+              </li>`)          
+        }
+    })
+
+</script>
 
 </html>

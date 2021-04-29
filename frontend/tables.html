@@ -39,14 +39,7 @@
           </div>
           <div class="card-body">
             <ul id="tableList" class="list-group">
-              <li class="list-gorup-item mt-4">
-                <h2>Table 0</h2>
-                <hr>
-                <h3>Id: 2</h3>
-                <h3>Name: B</h3>
-                <h3>Email: B</h3>
-                <h3>Phone: 0</h3>
-              </li>
+        
             </ul>
           </div>
         </div>
@@ -80,6 +73,7 @@
 <!-- BELOW CODE IS CRITICAL. IT HANDLES HOW FORM DATA IS LOADED FROM OUR SERVER -->
 <script type="text/javascript">
     var tableList = $("#tableList");
+    var waitlistList = $("#waitList");
     
     $.get('/api/tables', function(res){
         for (let i = 0; i < res.length; i++) {
@@ -91,8 +85,22 @@
                 <h3>Email: ${res[i].email}</h3>
                 <h3>Phone: ${res[i].phNum}</h3>
               </li>`)          
-        }
+        }   
     })
+    
+    $.get('/api/waitlist', function(res){
+        for (let i = 0; i < res.length; i++) {
+            waitlistList.html( waitlistList.html() + `<li class="list-gorup-item mt-4">
+                <h2>Waiting</h2>
+                <hr>
+                <h3>Id: ${res[i].id}</h3>
+                <h3>Name: ${res[i].name}</h3>
+                <h3>Email: ${res[i].email}</h3>
+                <h3>Phone: ${res[i].phNum}</h3>
+              </li>`)          
+        }   
+    })
+  
 
 </script>
 
